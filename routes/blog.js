@@ -29,6 +29,27 @@ router.get('/', function(req, res, next) {
       });         
   }); 
 });
+/* GET A POST */
+router.get('/post/:id', function(req, res, next) {
+
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("blog");
+    dbo.collection('posts').aggregate([
+      { "$match": { "_id": mongoose.Types.ObjectId(req.params.id) } },
+      { "$lookup": {
+        "localField": "author_id",
+        "from": "authors",
+        "foreignField": "_id",
+        "as": "author"
+      } }
+      ]).toArray(function(err, res_join) {
+        if (err) throw err;
+        res.json(res_join);
+        db.close();
+      });         
+  });
+});
 /* INSERT A NEW POSTS */
 router.post('/', function(req, res, next) {
   MongoClient.connect(url, function(err, db) {
@@ -38,8 +59,7 @@ router.post('/', function(req, res, next) {
       author_id:mongoose.Types.ObjectId(req.body.author_id),
       title:req.body.title,
       body:req.body.body,
-      date:new Date().getTime()
-      
+      date:new Date().getTime()      
     }
     dbo.collection("posts").insertOne(insertObj, function(err, res) {
       if (err) throw err;
@@ -47,6 +67,31 @@ router.post('/', function(req, res, next) {
       db.close();
     });
   });
+  console.log(req.body);
+  res.json(req.body);
+});
+/* UPDATE A POSTS */
+router.put('/', function(req, res, next) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("blog");
+    dbo.collection("posts").update(
+      { _id: mongoose.Types.ObjectId(req.body._id) },
+      {
+        $set: {
+          title: req.body.title,
+          body: req.body.body,
+        }
+      }).then(function(res){
+         console.log('success!');
+         }, response => {
+           // error callback
+           console.log(response);
+         });
+         db.close();    
+
+  });
+  console.log('Im the server');
   console.log(req.body);
   res.json(req.body);
 });
