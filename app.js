@@ -10,6 +10,8 @@ var basicAuth = require('express-basic-auth');
 var index = require('./routes/index');
 var blog = require('./routes/blog');
 
+
+
 var app = express();
 app.use(cors());
 
