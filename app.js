@@ -6,24 +6,17 @@ var cors = require('cors')
 var mongoose = require('mongoose');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var basicAuth = require('express-basic-auth');
 var index = require('./routes/index');
 var blog = require('./routes/blog');
 
 var app = express();
-app.use(cors())
-/*mongoose.Promise = global.Promise;
+app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/blog')
-  .then(() =>  console.log('connection succesful'))
-  .catch((err) => console.error(err));
-*/
+app.use(basicAuth({
+  users: { 'J3J+?!Ux{y]"{d2': 'U*uCem;/raWG8by&' }
+}))
 
-// view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'pug');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

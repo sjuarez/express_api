@@ -7,6 +7,7 @@ var Author = require('../models/Authors.js');
 var Schema = mongoose.Schema;
 
 var url = "mongodb://localhost:27017";
+
 /* GET ALL POSTS */
 router.get('/', function(req, res, next) {
   MongoClient.connect(url, function(err, db) {
@@ -23,7 +24,10 @@ router.get('/', function(req, res, next) {
        }
       ]).toArray(function(err, res_join) {
         if (err) throw err;
-        //console.log(JSON.stringify(res_join));
+        console.log('DEL GET!');
+        
+        console.log(req.headers.authorization);
+        //console.log(res);
         res.json(res_join);
         db.close();
       });         
@@ -52,6 +56,10 @@ router.get('/post/:id', function(req, res, next) {
 });
 /* INSERT A NEW POSTS */
 router.post('/', function(req, res, next) {
+  console.log('DEL POST!!!!');
+  
+  console.log(req.headers.authorization);
+
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("blog");
@@ -67,7 +75,6 @@ router.post('/', function(req, res, next) {
       db.close();
     });
   });
-  console.log(req.body);
   res.json(req.body);
 });
 /* UPDATE A POSTS */
