@@ -15,8 +15,9 @@ function getPosts(req, res) {
           }
           }
      ]).toArray(function(err, res_join) {
-          if (err) throw err;
+          if (err) throw err;          
           res.json(res_join);
+          
           db.close();
      });         
      });           
